@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Event : Ticketex - Your one-stop platform for buying, selling, and reselling tickets with ease, powered by secure
+        blockchain technology. </title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.ethers.io/lib/ethers-5.6.4.umd.min.js" type="application/javascript"></script>
+</head>
+
+<body>
+
+    <script>
+
+        function web3_check_metamask() {
+            if (!window.ethereum) {
+                console.error('It seems that the MetaMask extension is not detected. Please install MetaMask first.');
+                alert('It seems that the MetaMask extension is not detected. Please install MetaMask first.');
+                return false;
+            } else {
+                console.log('MetaMask extension has been detected!!');
+                return true;
+            }
+        }
+
+        function web3_metamask_hash() {
+            var hashed_string = '';
+            var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+            var total_chars = chars.length;
+            for (var i = 0; i < 64; i++) {
+                hashed_string += chars.charAt(Math.floor(Math.random() * total_chars));
+            }
+            return hashed_string;
+        }
+
+        async function web3_metamask_login() {
+            if (web3_check_metamask()) {
+                try {
+                    // Request account access
+                    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                    const walletAddress = accounts[0];
+                    console.log(`Connected: ${walletAddress}`);
+                    localStorage.setItem("wallet", walletAddress);
+
+                    if (document.getElementById("wallet-connect")) {
+                        document.getElementById("wallet-connect").textContent = walletAddress.slice(0, 4) + "****" + walletAddress.slice(walletAddress.length - 4, walletAddress.length);
+                    }
+                    if (document.getElementById("wallet-connect1")) {
+                        document.getElementById("wallet-connect1").textContent = walletAddress.slice(0, 4) + "****" + walletAddress.slice(walletAddress.length - 4, walletAddress.length);
+                    }
+                } catch (error) {
+                    console.error("User denied account access or error occurred", error);
+                }
+            }
+        }
+
+        function login() {
+            web3_metamask_login();
+        }
+
+        async function submitCreateForm() {
+            event.preventDefault();
+
+            const formData = new FormData(event.target);
+
+            const data = {
+                eventName: formData.get('eventName'),
+                location: formData.get('location'),
+                date: formData.get('date'),
+                description: formData.get('description'),
+                ticketsAvailable: parseInt(formData.get('ticketsAvailable')),
+                createdBy: localStorage.getItem("wallet"),
+            };
+
+            try {
+                const response = await fetch('http://localhost:5000/api/event/create-event', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-access-token': '', // Add the auth token here if needed
+                    },
+                    body: JSON.stringify(data),
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Error: ${response.statusText}`);
+                }
+
+                const result = await response.json();
+                alert('Event created successfully!');
+                location.href="/my-events.html"
+                console.log(result);
+            } catch (error) {
+                alert(`Event creation failed: ${error.message}`);
+            }
+        };
+
+    </script>
+
+    <div class="page-wrap">
+        <div data-animation="default" data-collapse="medium" data-duration="400" data-easing="ease" data-easing2="ease"
+            role="banner" class="navbar w-nav">
+            <div class="navbar-contents">
+                <nav role="navigation" class="nav-menu w-nav-menu">
+                    <a href="/#About" class="nav-link">About</a>
+                    <a href="/#Team" class="nav-link">The Team</a>
+                    <a href="/#Tech" class="nav-link">Tech used</a>
+                    <a href="/#FAQ" class="nav-link">faq</a>
+                    <div class="nav-right-content mobile">
+                        <a class="white-button w-button" onclick="localStorage.getItem('wallet')?'':login()"
+                            style="display: flex; justify-content: center; gap: 10px; align-items: center; cursor: pointer;">
+                            <img src="../images/meta.svg" alt="MetaMask" /> <span id="wallet-connect">Connect
+                                wallet</span> </a>
+                    </div>
+                </nav>
+                <a href="/" aria-current="page" class="brand w-nav-brand w--current"><img width="194" loading="lazy"
+                        alt="" src="images/logo-white.png"></a>
+                <div class="nav-right">
+                    <div class="nav-right-content desktop">
+                        <a class="white-button w-button" onclick="localStorage.getItem('wallet')?'':login()"
+                            style="display: flex; justify-content: center; gap: 10px; align-items: center; cursor: pointer;">
+                            <img src="../images/meta.svg" alt="MetaMask" /> <span id="wallet-connect1">Connect
+                                wallet</span> </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <section class="hero-ribbon-section">
+            <div class="center-content center-text">
+                <form id="createEventForm" class="create-event-form" onsubmit="submitCreateForm()">
+                    <h2>Create Event</h2>
+                    <input type="text" name="eventName" placeholder="Event Name" required />
+                    <input type="text" name="location" placeholder="Location" required />
+                    <input type="date" name="date" required />
+                    <textarea name="description" placeholder="Description"></textarea>
+                    <input type="number" name="ticketsAvailable" placeholder="Tickets Available" min="1" required />
+                    <button type="submit">Create Event</button>
+                </form>
+            </div>
+        </section>
+
+        <section class="footer">
+            <div class="w-layout-blockcontainer container w-container">
+                <div class="footer-content">
+                    <div class="footer-1-links">
+                        <a href="/#About" class="nav-link">About</a>
+                        <a href="/#Tech" class="nav-link">Tech Used</a>
+                        <a href="/#Team" class="nav-link">The Team</a>
+                        <a href="/#Pricing" class="nav-link">Pricing</a>
+                        <a href="/#FAQ" class="nav-link">FAQ</a>
+                    </div>
+                    <div class="social-logos-wrap">
+                        <a href="http://facebook.com" target="_blank" class="social-logo white w-inline-block"><img
+                                loading="lazy" src="images/Facebook.svg" alt=""></a>
+                        <a href="http://instagram.com" target="_blank" class="social-logo white w-inline-block"><img
+                                loading="lazy" src="images/instagram-logo_1.svg" alt=""></a>
+                        <a href="http://twitter.com" target="_blank" class="social-logo white w-inline-block"><img
+                                loading="lazy" src="images/social-media-social-media-logo-twitter.svg" alt=""></a>
+                    </div>
+                </div>
+                <div class="footer-bottom">
+                    <div class="footer-bottom-content">
+                        <div class="small-text">Copyright Ticketex PVT LTD &copy; 2024</div>
+                    </div>
+                </div>
+            </div>
+    </div>
+    </section>
+    </div>
+    <script>
+        var walletaddress = localStorage.getItem("wallet");
+        if (localStorage.getItem("wallet")) {
+            if (document.getElementById("wallet-connect")) {
+                document.getElementById("wallet-connect").textContent = walletaddress.slice(0, 4) + "****" + walletaddress.slice(walletaddress.length - 4, walletaddress.length);
+            }
+            else {
+                document.getElementById("wallet-connect").textContent = "Connect Wallet";
+            }
+
+            if (document.getElementById("wallet-connect1")) {
+                document.getElementById("wallet-connect1").textContent = walletaddress.slice(0, 4) + "****" + walletaddress.slice(walletaddress.length - 4, walletaddress.length);
+            }
+            else {
+                document.getElementById("wallet-connect1").textContent = "Connect Wallet";
+            }
+        }
+    </script>
+
+</html>
