@@ -53,8 +53,8 @@
             document.getElementById("wallet-connect1").textContent = walletAddress.slice(0, 4) + "****" + walletAddress.slice(walletAddress.length - 4, walletAddress.length);
           }
           if (document.getElementById("get-started-to-event-options")) {
-            document.getElementById("get-started-to-event-options").innerHTML = `<div class="event-options-buttons"><button onclick="location.href='/create-event.html'">Create Event</button> <button onclick="location.href='/my-events.html'">My Events</button> <button onclick="location.href='/join-event.html'">Join Event</button><button onclick="location.href='/my-tickets.html'">My Tickets</button></div>`
-          }
+        document.getElementById("get-started-to-event-options").innerHTML = `<div class="event-options-buttons"><button onclick="location.href='create-event.html'">Create Event</button> <button onclick="location.href='my-events.html'">My Events</button> <button onclick="location.href='join-event.html'">Join Event</button><button onclick="location.href='my-tickets.html'">My Tickets</button></div>`
+      }
         } catch (error) {
           console.error("User denied account access or error occurred", error);
         }
@@ -81,7 +81,7 @@
                 src="images/meta.svg" alt="MetaMask" /> <span id="wallet-connect">Connect wallet</span> </a>
           </div>
         </nav>
-        <a href="/" aria-current="page" class="brand w-nav-brand w--current"><img width="194" loading="lazy" alt=""
+        <a href="/frontend/" aria-current="page" class="brand w-nav-brand w--current"><img width="194" loading="lazy" alt=""
             src="images/logo-white.png"></a>
         <div class="nav-right">
           <div class="nav-right-content desktop">
@@ -415,7 +415,7 @@
       }
 
       if (document.getElementById("get-started-to-event-options")) {
-        document.getElementById("get-started-to-event-options").innerHTML = `<div class="event-options-buttons"><button onclick="location.href='/create-event.html'">Create Event</button> <button onclick="location.href='/my-events.html'">My Events</button> <button onclick="location.href='/join-event.html'">Join Event</button><button onclick="location.href='/my-tickets.html'">My Tickets</button></div>`
+        document.getElementById("get-started-to-event-options").innerHTML = `<div class="event-options-buttons"><button onclick="location.href='create-event.html'">Create Event</button> <button onclick="location.href='my-events.html'">My Events</button> <button onclick="location.href='join-event.html'">Join Event</button><button onclick="location.href='my-tickets.html'">My Tickets</button></div>`
       }
     }
   </script>
